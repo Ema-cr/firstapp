@@ -11,6 +11,7 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+
 export default function Home() {
     const product:string = "moto";
     console.log(product)
