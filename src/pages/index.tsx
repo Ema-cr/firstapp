@@ -9,6 +9,7 @@ export default function Home() {
   const handleCLick =()=>{
     const laSuma = sumar(10,50);
 
+    setResult(laSuma);
   };
 
   const sumar = (a:values,b:values):values => {
