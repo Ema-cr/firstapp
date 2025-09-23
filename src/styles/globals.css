@@ -25,7 +25,15 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+.container-cars {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 1rem;
+}
 
-miButton{
-  border-radius: 14px;
+.dashboard--button{
+  
 }
