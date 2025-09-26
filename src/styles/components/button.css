@@ -1,0 +1,23 @@
+.dashboard--button{
+  padding: 12px 25px;
+  background: #2ecc71;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.dashboard--button:hover{
+  background: #27ae60;
+  transform: translateY(-2px);
+}
+
+.dashboard--button--disabled{
+    opacity: .5;
+}
+
+.dashboard--button--disabled:hover{
+  transform: none;
+  cursor:auto
+}

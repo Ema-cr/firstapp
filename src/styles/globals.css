@@ -1,4 +1,6 @@
 @import "tailwindcss";
+@import "./components/card.css";
+@import "./components/button.css";
 
 :root {
   --background: #ffffff;
@@ -16,13 +18,14 @@
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
+    --background2: #cac0c0;
   }
 }
 
 body {
-  background: var(--background);
+  background: var(--background2);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: "Space Grotesk", sans-serif;
 }
 
 .container-cars {
@@ -32,8 +35,4 @@ body {
   max-width: 500px;
   margin: 0 auto;
   padding: 1rem;
-}
-
-.dashboard--button{
-  
 }
