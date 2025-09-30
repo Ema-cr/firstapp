@@ -15,3 +15,35 @@ export interface Product {
     color?: string;
   };
 }
+
+
+  interface Product{
+    name:string;
+    brand:string;
+    quantity:string;
+    price:number;
+    currency:'COP'|'USD';
+    isActive:boolean;
+    category:string;
+    imageUrl:string;
+    createdAt:Date;
+    tags: unknown;
+    dimensions: unknown;
+  };
+
+
+  interface Address{
+    street:string;
+    city:string;
+    country:string
+  };
+
+  interface User{
+    name:string;
+    phone:number;
+    cc:number;
+    email:string;
+    address:Address;
+    birth:Date;
+    isActive:boolean
+  };
