@@ -22,6 +22,21 @@ export default async function handler(
 
     try{
 
+
+// await dbConnection();
+
+// const { id } = req.query; 
+
+// const property = await Properties.findById(id);
+
+// console.log(property);
+
+// res.status(200).json({
+//   ok: true,
+//   data: property as Property,
+// });
+
+
     if (req.method === "GET") {
       dbConnection()
       const data = await Properties.find()
