@@ -2,6 +2,7 @@ import { useState } from "react";
 import { cars } from "../utils/utils"
 import Login from './login/index';
 import { ToastContainer, toast } from "react-toastify";
+import { getProperties } from "@/services/properties";
 
   type values = number
 
@@ -20,6 +21,10 @@ export default function Home() {
   // const sumar = (a:values,b:values):values => {
   //   return a + b
   // };
+
+  const[properties, setProperties]
+
+
 
   return (
     
@@ -114,3 +119,11 @@ const result2 = triplestr("alfonso")
 console.log(result2)
 
 // --------------------------------------
+
+
+const handleClick = async () => {
+  const response = await getProperties();
+  console.log(response.data)
+
+  setPropert
+}

@@ -11,7 +11,7 @@ interface Property {
   _id: string;
   name: string;
   value: number;
-  img?: string;
+  img?: string; 
 }
 
 
@@ -39,30 +39,60 @@ export default async function handler(
 
     if (req.method === "GET") {
       dbConnection()
-      const data = await Properties.find()
-      console.log(data)
-
+      const data = await Properties.find({})
+    
       res.status(200).json({
         ok: true,
         data: data as Property[]
       });
     }
     if (req.method === 'POST'){
-        console.log('codigo de post')
-        res.status(200).json({ name: "funciona el post" });
+      const {name, value, img} = req.body;
+      
+      
+      const newProperty = new Properties({
+        name,value,img
+      });
+
+      const savedProperty = newProperty.save()
+      console.log(savedProperty)
+      
+        res.status(200).json({ ok: true, message:"property saved", createdId: savedProperty._id });
     }
-    if (req.method === 'PUT'){
-        console.log('codigo de put')
-        res.status(200).json({ name: "funciona el put" });
+    if (req.method === "PUT") {
+      const { id, name, value, img } = req.body;
+
+      try {
+        const propertyUpdate = await Properties.findByIdAndUpdate(id, {
+          name,
+          value,
+          img,
+
+        }, {new:true});
+        console.log(propertyUpdate);
+      } catch {
+        res.status(400)
+      }
+
+      res
+        .status(200)
+        .json({ ok: true, message: "property update", updatedId: id });
     }
     if (req.method === 'PATCH'){
         console.log('codigo de patch')
         res.status(200).json({ name: "funciona el patch" });
     }
     if (req.method === 'DELETE'){
-        console.log('codigo de delete')
-        res.status(200).json({ name: "funciona el delete" });
+        const {id} = req.query;
+        console.log(id);
+
+        const propertyDeleted = await Properties.findByIdAndDelete(id)
+        console.log(propertyDeleted)
+
+        res.status(200).json({ok: true, message:'property deleted', deletedId: `${id}`});
     }
+
+
     else {
         res.status(500).json({name:"el metodo no esta permitido"})
     }
