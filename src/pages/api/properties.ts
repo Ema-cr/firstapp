@@ -1,6 +1,7 @@
-import Properties from "@/database/models/properties";
 import dbConnection from "@/lib/dbconnection";
 import type { NextApiRequest, NextApiResponse } from "next";
+import Properties from '@/database/models/properties';
+
 
 type Data = {
   name: string;
@@ -14,90 +15,101 @@ interface Property {
   img?: string; 
 }
 
+type GetResponse = { ok: true; data: Property[] };
+type PostResponse = { ok: true; message: string; createdId?: string };
+type PutResponse = { ok: true; message: string; updatedId?: string };
+type DeleteResponse = { ok: true; message: string; deletedId?: string };
+type ErrorResponse = { ok: false; error: string };
+
+
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>,
 ) {
+  console.log(req.method)
 
-    try{
+  try {
+    dbConnection();
 
+     if (req.method === "GET") {
 
-// await dbConnection();
+      const data = await Properties.find();
 
-// const { id } = req.query; 
-
-// const property = await Properties.findById(id);
-
-// console.log(property);
-
-// res.status(200).json({
-//   ok: true,
-//   data: property as Property,
-// });
-
-
-    if (req.method === "GET") {
-      dbConnection()
-      const data = await Properties.find({})
-    
       res.status(200).json({
         ok: true,
-        data: data as Property[]
+        miInfo: data as Property[],
       });
     }
-    if (req.method === 'POST'){
-      const {name, value, img} = req.body;
-      
-      
-      const newProperty = new Properties({
-        name,value,img
-      });
 
-      const savedProperty = newProperty.save()
-      console.log(savedProperty)
-      
-        res.status(200).json({ ok: true, message:"property saved", createdId: savedProperty._id });
-    }
-    if (req.method === "PUT") {
-      const { id, name, value, img } = req.body;
+   if (req.method === "POST") {
+      const { name, value, img } = req.body;
 
       try {
-        const propertyUpdate = await Properties.findByIdAndUpdate(id, {
+        const newProperty = new Properties({
           name,
           value,
           img,
+        });
 
-        }, {new:true});
+        const savedProperty = await newProperty.save();
+
+        return res.status(201).json({
+          ok: true,
+          message: "property saved",
+          createdId: savedProperty._id,
+        });
+      } catch (error) {
+        console.error(error);
+        res.status(500).json({ ok: false, error: "internal server error" });
+      }
+    }
+
+if (req.method === "PUT") {
+      const { id, name, value, img } = req.body;
+
+      try {
+        const propertyUpdate = await Properties.findByIdAndUpdate(
+          id,
+          {
+            name,
+            value,
+            img,
+          },
+          { new: true }
+        );
         console.log(propertyUpdate);
       } catch {
-        res.status(400)
+        res.status(400);
       }
 
       res
         .status(200)
         .json({ ok: true, message: "property update", updatedId: id });
     }
+
+
     if (req.method === 'PATCH'){
         console.log('codigo de patch')
         res.status(200).json({ name: "funciona el patch" });
     }
-    if (req.method === 'DELETE'){
-        const {id} = req.query;
-        console.log(id);
 
-        const propertyDeleted = await Properties.findByIdAndDelete(id)
-        console.log(propertyDeleted)
 
-        res.status(200).json({ok: true, message:'property deleted', deletedId: `${id}`});
+  if (req.method === "DELETE") {
+      const { id } = req.query;
+      console.log(id);
+
+      await Properties.findByIdAndDelete(id);
+
+      res
+        .status(200)
+        .json({ ok: true, message: "property deleted", deletedId: `${id}` });
     }
-
-
-    else {
-        res.status(500).json({name:"el metodo no esta permitido"})
-    }
-} catch (err) {
-    console.log(err)
-    res.status(500).json ({name:"fallo"})
-}
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      ok: false,
+      error: "Internal server error",
+    });
+  }
 }

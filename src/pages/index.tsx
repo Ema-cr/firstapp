@@ -1,13 +1,95 @@
-import { useState } from "react";
-import { cars } from "../utils/utils"
+import { useEffect, useState } from "react";
 import Login from './login/index';
 import { ToastContainer, toast } from "react-toastify";
-import { getProperties } from "@/services/properties";
+import { createProperty, getProperties } from "@/services/properties";
+import async from "./api/properties"
 
-  type values = number
+ interface propertyProps {
+    _id:string
+    name:string,
+    value: number,
+    img: string
+  }
+
+
+  interface dataProperties {
+    ok: string,
+    miInfo:propertyProps[]
+  }
+
 
 export default function Home() {
-  // const [result, setResult] = useState(0);
+
+const [dataProperties, setDataProperties] = useState({} as dataProperties);
+const [count, setCount] = useState(0);
+
+const handleClick = async () => {
+  const response = await getProperties();
+  setDataProperties(response);
+};
+
+
+useEffect(() => {
+  const fechData =  async () =>{
+    const response = await getProperties();
+    setDataProperties(response);
+  };
+  fechData();
+},[]);
+
+console.log(dataProperties.miInfo)
+
+ const handlseSave = () =>{
+    
+
+     createProperty({
+       name: nameImput,
+       Value: valueImput,
+      img: imgInput,
+    })
+
+  }
+
+
+   return (
+    <div>
+      <div>
+        <div>Hola mundo</div>
+        <div className="flex gap-2">
+          {/* <MiButton text={"llamar endpoin"} icon={""} click={ handleClick } /> */}
+          {/* <button onClick={handleClick}>llamar endpoint</button> */}
+          <button
+            onClick={() => {
+              setCount(count + 1);
+            }}
+          >
+            +1
+          </button>
+        </div>
+
+        {dataProperties.ok && (
+          <div className="flex gap-2">
+            {dataProperties.miInfo.map((property) => (
+              <div key={property._id}>
+                <div>{property.name}</div>
+                <div>{property.value}</div>
+                <img src={property.img} alt={property.name} />
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+      <div>
+
+       
+       <button onClick={handlseSave} >guardar propiedad</button>
+      </div>
+      <ToastContainer />
+    </div>
+  );
+}
+
+ // const [result, setResult] = useState(0);
 
   // const handleCLick =()=>{
   //   const laSuma = sumar(10,50);
@@ -21,35 +103,6 @@ export default function Home() {
   // const sumar = (a:values,b:values):values => {
   //   return a + b
   // };
-
-  const[properties, setProperties]
-
-
-
-  return (
-    
-
-    // <div className="container-cars">
-    //    {cars?.map((carro, index) => (
-    //      <div className="bg-blue-200" key={index}>
-    //         <div className="bg-blue-700 model">{carro.model}</div>
-    //         <div className="bg-blue-600 brand">{carro.brand}</div>
-    //         <div className="bg-blue-500 cc">{carro.cc}</div>
-    //         <div className="bg-blue-400 traction">{carro.traction}</div>
-    //         <div className="bg-blue-300 motor">{carro.motor}</div>
-    //         <div>Login</div>
-    //     </div>
-    // ))}
-    // </div>
-
-  <div>
-    <Login></Login>
-  </div>
-
-
-  );
-};
-
 
 // function indentify <T>(parametro:T):T{
 //   return parametro
@@ -116,14 +169,6 @@ const triplestr = <T,>(value:T):T[] =>{
 }
 
 const result2 = triplestr("alfonso")
-console.log(result2)
+console.log(result2);
 
 // --------------------------------------
-
-
-const handleClick = async () => {
-  const response = await getProperties();
-  console.log(response.data)
-
-  setPropert
-}
