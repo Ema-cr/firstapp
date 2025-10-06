@@ -1,73 +1,84 @@
-import Properties from "@/database/models/properties";
-import dbConnection from "@/lib/dbconnection";
 import type { NextApiRequest, NextApiResponse } from "next";
+import dbConnection from "@/lib/dbconnection";
+import Property, { IProperty } from "@/database/models/properties";
 
-type Data = {
-  name: string;
-  error?: Error
-};
+type Data =
+  | { ok: true; data?: IProperty[]; message?: string; createdId?: string; updatedId?: string; deletedId?: string }
+  | { ok: false; error: string };
 
-interface Property {
-  _id: string;
-  name: string;
-  value: number;
-  img?: string;
-}
+export default async function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
+  await dbConnection();
 
-
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse<Data>,
-) {
-
-    try{
-
-
-// await dbConnection();
-
-// const { id } = req.query; 
-
-// const property = await Properties.findById(id);
-
-// console.log(property);
-
-// res.status(200).json({
-//   ok: true,
-//   data: property as Property,
-// });
-
-
+  try {
+    // -----------------------------
+    // GET: obtener todas las propiedades
+    // -----------------------------
     if (req.method === "GET") {
-      dbConnection()
-      const data = await Properties.find()
-      console.log(data)
+      const properties = await Property.find();
+      return res.status(200).json({ ok: true, data: properties });
+    }
 
-      res.status(200).json({
-        ok: true,
-        data: data as Property[]
-      });
+    // -----------------------------
+    // POST: crear una nueva propiedad
+    // -----------------------------
+    if (req.method === "POST") {
+      const { name, value, img } = req.body;
+      const newProperty = new Property({ name, value, img });
+      const savedProperty = await newProperty.save();
+      return res.status(201).json({ ok: true, data: [savedProperty], createdId: savedProperty._id });
     }
-    if (req.method === 'POST'){
-        console.log('codigo de post')
-        res.status(200).json({ name: "funciona el post" });
+
+    // -----------------------------
+    // PUT: actualizar una propiedad
+    // -----------------------------
+    if (req.method === "PUT") {
+      const { id, name, value, img } = req.body;
+
+      if (!id) {
+        return res.status(400).json({ ok: false, error: "Id is required" });
+      }
+
+      const propertyUpdate = await Property.findByIdAndUpdate(id, { name, value, img }, { new: true });
+
+      if (!propertyUpdate) {
+        return res.status(404).json({ ok: false, error: "Property not found" });
+      }
+
+      return res.status(200).json({ ok: true, message: "property updated", updatedId: id });
     }
-    if (req.method === 'PUT'){
-        console.log('codigo de put')
-        res.status(200).json({ name: "funciona el put" });
+
+    // -----------------------------
+    // PATCH: ejemplo de patch
+    // -----------------------------
+    if (req.method === "PATCH") {
+      return res.status(200).json({ ok: true, message: "funciona el patch" });
     }
-    if (req.method === 'PATCH'){
-        console.log('codigo de patch')
-        res.status(200).json({ name: "funciona el patch" });
+
+    // -----------------------------
+    // DELETE: eliminar una propiedad
+    // -----------------------------
+    if (req.method === "DELETE") {
+      const { id } = req.query;
+
+      if (!id || typeof id !== "string") {
+        return res.status(400).json({ ok: false, error: "Invalid id" });
+      }
+
+      const deletedProperty = await Property.findByIdAndDelete(id);
+
+      if (!deletedProperty) {
+        return res.status(404).json({ ok: false, error: "Property not found" });
+      }
+
+      return res.status(200).json({ ok: true, message: "property deleted", deletedId: id });
     }
-    if (req.method === 'DELETE'){
-        console.log('codigo de delete')
-        res.status(200).json({ name: "funciona el delete" });
-    }
-    else {
-        res.status(500).json({name:"el metodo no esta permitido"})
-    }
-} catch (err) {
-    console.log(err)
-    res.status(500).json ({name:"fallo"})
-}
+
+    // -----------------------------
+    // Método no permitido
+    // -----------------------------
+    return res.status(405).json({ ok: false, error: "Method not allowed" });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ ok: false, error: "Internal server error" });
+  }
 }

@@ -1,4 +1,7 @@
-const products: Product[] = [
+import { Product, User } from "@/Dto/Product";
+
+
+export const products: Product[] = [
   {
     name: "Laptop Dell XPS",
     brand: "Dell",
@@ -196,7 +199,7 @@ const products: Product[] = [
   }
 ];
 
-const users: User[] = [
+export const users: User[] = [
   {
     name: "Ricardo Harrison",
     phone: 3001234567,
@@ -264,10 +267,3 @@ const users: User[] = [
   }
 ];
 
-users.map((user, i) => {
-  console.log(`User ${i + 1}:`, user);
-});
-
-products.map((product, i) => {
-  console.log(`Product ${i + 1}:`, product);
-});

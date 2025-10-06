@@ -3,21 +3,7 @@ export interface Price {
   currency: 'COP' | 'USD';
 }
 
-export interface Product {
-  id: string;
-  name: string;
-  brand: string;
-  quantity: number;
-  price: Price;
-  isActive: boolean;
-  specs?: {
-    weightGr?: number;
-    color?: string;
-  };
-}
-
-
-  interface Product{
+export interface Product{
     name:string;
     brand:string;
     quantity:string;
@@ -32,13 +18,13 @@ export interface Product {
   };
 
 
-  interface Address{
+export interface Address{
     street:string;
     city:string;
     country:string
   };
 
-  interface User{
+export interface User{
     name:string;
     phone:number;
     cc:number;

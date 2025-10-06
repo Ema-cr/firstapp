@@ -1,17 +1,15 @@
 import mongoose from "mongoose";
 
-const dbConnection = async () => {
+let isConnected = false;
+
+export default async function dbConnection() {
+  if (isConnected) return;
 
   try {
-    const mongodbAtlas = process.env.MONGODB_URI || ""; 
-    await mongoose.connect(mongodbAtlas);
-
-    console.log('DB Online');
-
-  } catch (error) {
-    console.log(error);
-    throw new Error("Error en la base de datos - Hable con el administrador");
+    const db = await mongoose.connect(process.env.MONGODB_URI!);
+    isConnected = true;
+    console.log("MongoDB connected:", db.connection.name);
+  } catch (err) {
+    console.error("MongoDB connection error:", err);
   }
-};
-
-export default dbConnection;
+}

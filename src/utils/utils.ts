@@ -1,5 +1,4 @@
 import { User } from "@/Dto/Users"
-import { type } from '../../.next/types/routes';
 import { toast } from "react-toastify";
 
 const sumar = (prop1:number, prop2:number) =>{
