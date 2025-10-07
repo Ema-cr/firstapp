@@ -10,17 +10,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
   await dbConnection();
 
   try {
-    // -----------------------------
-    // GET: obtener todas las propiedades
-    // -----------------------------
+
     if (req.method === "GET") {
       const properties = await Property.find();
       return res.status(200).json({ ok: true, data: properties });
     }
 
-    // -----------------------------
-    // POST: crear una nueva propiedad
-    // -----------------------------
     if (req.method === "POST") {
       const { name, value, img } = req.body;
       const newProperty = new Property({ name, value, img });
@@ -28,9 +23,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
       return res.status(201).json({ ok: true, data: [savedProperty], createdId: savedProperty._id });
     }
 
-    // -----------------------------
-    // PUT: actualizar una propiedad
-    // -----------------------------
     if (req.method === "PUT") {
       const { id, name, value, img } = req.body;
 
@@ -47,16 +39,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
       return res.status(200).json({ ok: true, message: "property updated", updatedId: id });
     }
 
-    // -----------------------------
-    // PATCH: ejemplo de patch
-    // -----------------------------
     if (req.method === "PATCH") {
       return res.status(200).json({ ok: true, message: "funciona el patch" });
     }
 
-    // -----------------------------
-    // DELETE: eliminar una propiedad
-    // -----------------------------
     if (req.method === "DELETE") {
       const { id } = req.query;
 
@@ -73,9 +59,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
       return res.status(200).json({ ok: true, message: "property deleted", deletedId: id });
     }
 
-    // -----------------------------
-    // Método no permitido
-    // -----------------------------
     return res.status(405).json({ ok: false, error: "Method not allowed" });
   } catch (error) {
     console.error(error);
