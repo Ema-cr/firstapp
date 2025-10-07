@@ -4,11 +4,17 @@ import { useRouter } from "next/router";
 import { ToastContainer } from "react-toastify";
 import { FiCheck, FiDollarSign } from "react-icons/fi";
 import { Card } from "@/components/card/Card";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { Switch } from "@heroui/react";
+import { MyContext } from "@/context/Context";
 
 const Dashboard = () => {
   const router = useRouter();
   const [loader, setLoader] = useState(false);
+  const {isActive, setIsActive, miObject} = useContext(MyContext)
+
+
+  console.log(miObject)
 
   if (router.route == "/dashboard") {
     console.log(router.asPath);
@@ -150,6 +156,10 @@ const Dashboard = () => {
               arrowIconSrc={card.arrowIconSrc}
             />
           ))}
+
+          <Switch isSelected={isActive} onValueChange={setIsActive}>
+                Airplane mode
+        </Switch>
         </div>
       </div>
     </div>

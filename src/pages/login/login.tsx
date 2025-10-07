@@ -1,12 +1,18 @@
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { authenticate } from "@/utils/authenticate";
 import { ToastContainer, toast } from "react-toastify";
+import { Switch } from "@heroui/react";
+import { MyContext } from "@/context/Context";
+
 
 const Login = () => {
   const [user, setUser] = useState("");
   const [passWord, setpassWord] = useState("");
   const router = useRouter();
+  const {isActive, setIsActive,miObject } = useContext(MyContext)
+
+  console.log(miObject)
 
   const handleChangeUser = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUser(e.target.value);
@@ -100,9 +106,12 @@ const Login = () => {
         >
           Ingresar
         </button>
-        <ToastContainer />
       </div>
+        <Switch isSelected={isActive} onValueChange={setIsActive}>
+                    Airplane mode
+        </Switch>
     </div>
+    
   );
 };
 
