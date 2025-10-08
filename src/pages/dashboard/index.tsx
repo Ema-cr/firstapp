@@ -7,6 +7,7 @@ import { Card } from "@/components/card/Card";
 import { useContext, useState } from "react";
 import { Switch } from "@heroui/react";
 import { MyContext } from "@/context/Context";
+import Form from '../../Formulario';
 
 const Dashboard = () => {
   const router = useRouter();
@@ -160,6 +161,7 @@ const Dashboard = () => {
           <Switch isSelected={isActive} onValueChange={setIsActive}>
                 Airplane mode
         </Switch>
+        <Form></Form>
         </div>
       </div>
     </div>
